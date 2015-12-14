@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 	
+<!--Para que podamos usar acentos y caracteres raros -->
+    <link rel='stylesheet' type='text/css' href='estilos/style.css' />
+	<link rel='stylesheet' 
+		   type='text/css' 
+		   media='only screen and (min-width: 530px) and (min-device-width: 481px)'
+		   href='estilos/wide.css' />
+	<link rel='stylesheet' 
+		   type='text/css' 
+		   media='only screen and (max-width: 480px)'
+		   href='estilos/smartphone.css' />
+
+<head><title> Registro </title>
+	
+<script>
+		
+	function verificarCampos()
+	{
+		
+			if ( !comprobarNombre() ||  !comprobarMail() || !comprobarPassword() || !comprobarTelefono() || !comprobarEspecialidad() ) 
+				{
+					alert ("Rellene los campos correctamente");
+					return false;
+				} 
+					
+			return true;				
+		
+	} 
+	
+	function vervalores()
+	{  
+		
+			var sAux=""; 
+			var frm = document.getElementById("registro"); 
+			for (i=1;i<frm.elements.length;i++) 
+				{ 
+					sAux += "NOMBRE: " + frm.elements[i].name + " "; 
+					sAux += "VALOR: " + frm.elements[i].value + "\n"; 
+				} 
+			alert(sAux);
+	} 
+
+	
+	function comprobarNombre()
+	{
+			var nombre = document.getElementById("nombreCompleto");
+			if (! /^[a-zA-Z]+[a-zA-Z] [a-zA-Z]+[a-zA-Z] [a-zA-Z]+[a-zA-Z]( [a-zA-Z]+[a-zA-Z])*$/.test(nombre.value) )
+				{
+					alert("Introduzca un nombre y 2 apellidos.\n");
+					return false;
+				}
+			return true;		
+	} 
+	
+	
+	function comprobarPassword()
+		{
+			var Password = document.getElementById("pass");
+			if (pass.value.length < 6)
+			 {
+				alert("Error, la contraseña necesita tener 6 caracteres.\n");
+				return false;
+			 }			 
+			 return true;
+						
+		}
+	
+	
+	function comprobarTelefono()
+		{
+			
+			var telefono = document.getElementById("numero");
+			if (! /^\d{9}$/.test(numero.value)) 
+			{
+				alert("Introduzca un número de teléfono correcto.\n");
+				return false;
+			}
+			return true;
+		} 
+		
+		
+	function comprobarMail()
+		{
+			var mail = document.getElementById("mail").value; 
+			
+			if (! /^[a-zA-Z]+\d{3}@ikasle\.ehu\.(es|eus)$/.test(mail)) 
+			{	
+				alert("El correo no es válido.\n");
+				return false;
+			}
+			return true;	
+		}
+		
+	function comprobarEspecialidad()
+		{
+			var especialidad = document.getElementById("especialidad").value; 
+						
+			if (especialidad.length < 5) 
+			{
+				alert("Introduzca una especialidad correcta.\n");
+				return false;
+			}
+			return true;			
+	}		
+</script>	
+
+</head>
+
+<body style="background-color: transparent"> 
+
+<form id='registro' onSubmit='return verificarCampos()' action="Registrar.php"  method="POST">	
+		
+	  Nombre y apellidos:<br>
+	  <input type="text" id="nombreCompleto" name="nombreCompleto" required="required" onblur="comprobarNombre()"><br>
+	  
+	  Email:<br>
+	  <input type="text" id="mail" name="mail" required="required"  onblur="comprobarMail()"><br>
+
+	  Password:<br>
+	  <input type="password" id="pass" name="pass" required="required"  onblur="comprobarPassword()"><br>
+	  
+	  Teléfono:<br>
+	  <input type="tel" id="numero" name="numero" required="required"  onblur="comprobarTelefono()"><br>
+	  
+	  Especialidad:<br>
+	  <select id="especialidad" name="especialidad" required="required"  onblur="comprobarEspecialidad()">
+		  <option> Ingeniería de Computadores </option>
+		  <option> Ingenieria del Software </option>
+		  <option> Computación </option>
+	  </select><br>
+	  
+	  	Añade una fotografía <br> 
+		 
+	  <input type="file" id="foto" name="foto"><br>
+	  <input type="submit">
+  
+ </form>
+	
+</body> 
+
+</html>

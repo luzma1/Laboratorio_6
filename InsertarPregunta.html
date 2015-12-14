@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 	
+<!--Para que podamos usar acentos y caracteres raros -->
+    <link rel='stylesheet' type='text/css' href='estilos/style.css' />
+	<link rel='stylesheet' 
+		   type='text/css' 
+		   media='only screen and (min-width: 530px) and (min-device-width: 481px)'
+		   href='estilos/wide.css' />
+	<link rel='stylesheet' 
+		   type='text/css' 
+		   media='only screen and (max-width: 480px)'
+		   href='estilos/smartphone.css' />
+
+<head><title> Insertar Pregunta </title>
+	
+<script>
+		
+	function verificarCampos()
+	{
+		
+			if ( !comprobarPregunta()||!comprobarRespuesta()||!comprobarComplejidad()()) 
+				{
+					alert ("Rellene los campos correctamente");
+					return false;
+				} 
+					
+			return true;				
+		}
+		
+	function comprobarPregunta()
+		{
+			var Pregunta = document.getElementById("pregunta");
+			if (Pregunta.value.length < 6)
+			 {
+				alert("Error, introduzca una pregunta correcta.\n");
+				return false;
+			 }			 
+			 return true;
+						
+		}
+		
+		
+	function comprobarRespuesta()
+		{
+			var Respuesta = document.getElementById("respuesta");
+			if (Respuesta.value.length < 2)
+			 {
+				alert("Error, introduzca una respuesta correcta.\n");
+				return false;
+			 }			 
+			 return true;			
+		}
+		
+	function comprobarComplejidad()
+		{
+			var Complejidad = document.getElementById("complejidad");
+			if (Complejidad.value < 1 || Complejidad.value > 5)
+			 {
+				alert("Error, introduzca un valor correcto.\n");
+				return false;
+			 }			 
+			 return true;			
+		}		
+	
+</script>	
+
+</head>
+
+<body style="background-color: transparent"> 
+ 
+    <h2>Insertar Pregunta</h2>
+    <br>
+    <h3>Inserte una pregunta y una respuesta.</h3>
+		
+		<form name='registro' action="InsertarPregunta.php" method="post" onSubmit='return verificarCampos()'> 
+		
+			Pregunta<br/>
+			<input type="text" id="pregunta" name="pregunta" onBlur = "comprobarPregunta()">
+			<br/><br/>
+		    
+		    Respuesta<br/>
+				<input type="text" id="respuesta" name="respuesta" onBlur = "comprobarRespuesta()">
+			<br/><br/>
+			
+			Complejidad<br/>
+		    <input type="range" id="complejidad" name="complejidad" min="1" max="5" value="1" onBlur= "comprobarComplejidad()" oninput="document.getElementById('valor').textContent=value">
+		    <output id="valor">1</output>
+		    <br/><br/>
+		    
+		    <input type="submit" value="Enviar pregunta" name="enviarPregunta" >
+
+		</form>
+	
+</body> 
+
+</html>
