@@ -33,7 +33,6 @@
 				var respuesta = form.respuesta.value;
 				var complejidad = form.complejidad.value;
 				var email= "<?php echo $email; ?>";	
-				//var mail= "lhorvath001@ikasle.ehu.eus";	
 
 								
 				// Así se añaden las preguntas 
@@ -41,12 +40,10 @@
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState==4 && xmlhttp.status==200){
 						if (xmlhttp.responseText != "false") {
-							alert("Todo esta correcto");
+							alert("Se ha insertado correctamente");
 							document.getElementById("registro").pregunta.value = "";
 							document.getElementById("registro").respuesta.value = "";
 							document.getElementById("registro").complejidad.value = 1;
-							//CREAR UN DIV CON ID MENSAJE Y LO MODIFICO DICIENDO QUE TODO VA BIEN
-							//MIRAR LO DEL MAIL
 													
 						} else { 
 							alert("Su pregunta no ha podido ser procesada. Compruebe que ha rellenado los campos correctamente.");
@@ -54,13 +51,54 @@
 					}
 				}
 				//Con Get es mas sencillo 										
-				//xmlhttp.open("GET","preguntas.php?f=insertarPregunta", true);
 				
 				xmlhttp.open("GET","preguntas.php?f=insertarPregunta&email=" + email + "&pregunta=" + pregunta + "&respuesta=" + respuesta + "&complejidad=" + complejidad, true);
-
-				
-				//http: //swluzma.esy.es/Laboratorio_6/preguntas.php?funcion=insertarPregunta&email=asdfasdf&pregunta=asuuhuhudf&respuesta=asdrf&complejidad=3
+			
+				//http: //swluzma.esy.es/Laboratorio_6/preguntas.php?f=insertarPregunta&email=asdfasdf&pregunta=asuuhuhudf&respuesta=asdrf&complejidad=3
 				xmlhttp.send();
+			}
+			
+			function selectPregunta(num_preg) {
+				
+				document.getElementById(num_preg + "_pregunta").disabled = false;
+				document.getElementById(num_preg + "_respuesta").disabled = false;
+				document.getElementById(num_preg + "_complejidad").disabled = false;
+				document.getElementById(num_preg + "_button").value = "Enviar";
+				
+				document.getElementById(num_preg + "_button").setAttribute("onClick", "editPreg("+num_preg+");");
+				
+			}
+			function editPreg( num_preg ) {						
+				var pregunta = document.getElementById(num_preg + "_pregunta").value; 
+				var respuesta = document.getElementById(num_preg + "_respuesta").value; 
+				var complejidad = document.getElementById(num_preg + "_complejidad").value;
+							
+				if (window.XMLHttpRequest) {
+					// code for IE7+, Firefox, Chrome, Opera, Safari
+					xmlhttp = new XMLHttpRequest();
+				} else {
+					// code for IE6, IE5
+					xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				}
+									
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						if (xmlhttp.responseText != "false") {
+							document.getElementById(num_preg + "_pregunta").disabled = true;
+							document.getElementById(num_preg + "_respuesta").disabled = true;
+							document.getElementById(num_preg + "_complejidad").disabled = true;
+							document.getElementById(num_preg + "_button").value = "Editar";
+							document.getElementById(num_preg + "_button").setAttribute("onClick", "selectPregunta(" + num_preg + ");");
+						} else {
+							alert("Error al insertar el texto.");
+						}
+						
+					}
+				}
+				
+				xmlhttp.open("GET","preguntas.php?f=modificarPregunta&id=" + num_preg + "&pregunta=" + pregunta + "&respuesta=" + respuesta + "&complejidad=" + complejidad, true);				// http: //swluzma.esy.es/Laboratorio_6/preguntas.php?f=modificarPregunta&id=29&pregunta=nuevovalor&respuesta=modificad1o&complejidad=5
+
+				xmlhttp.send();					
 			}
 		
 		
@@ -119,7 +157,7 @@
 			$sql = "SELECT * FROM preguntas WHERE preguntas.email='{$email}'";		       
             $consulta = mysqli_query($connection, $sql);
             $num_filas= $consulta->num_rows;
-                        
+            $preguntas = "";  
                         
                         //Se dibuja la tabla de los usuarios
                     if ($num_filas > 0) {
@@ -138,15 +176,16 @@
                         
                         // fetch_assoc(): Devuelve un array asociativo de strings que representa a la fila obtenida del conjunto de resultados, 
                         // donde cada clave del array representa el nombre de una de las columnas de éste
-                        
+                              
                         while($row = $consulta->fetch_assoc()) {
                             echo "
-                            <tr> 
-                                <td>".$row["pregunta"]."</td>
-                                <td>".$row["respuesta"]."</td>
-                                <td>".$row["complejidad"]."</td>
-                                <td><input id='".$row["id"]."_button' type='button' id='".$row["id"]."_button' value='Editar' onClick='seleccionarPregunta(".$row['id'].")'/></td>                                
-                            </tr>";
+                            <tr>                              
+                                <td><input id='".$row["id"]."_pregunta' type='text' disabled value='".$row["pregunta"]."'/></td>
+								<td><input id='".$row["id"]."_respuesta' type='text' disabled value='".$row["respuesta"]."'/></td>
+								<td><input id='".$row["id"]."_complejidad' type='text' disabled value='".$row["complejidad"]."'/></td>
+								<td><input id='".$row["id"]."_button' type='button' id='".$row["id"]."_button' value='Editar' onClick='selectPregunta(".$row['id'].")'/></td>                               
+                            </tr>
+                            ";
                         }
                         //variables .$X. para imprimir?
                         

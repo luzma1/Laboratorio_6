@@ -3,13 +3,17 @@
 		case "insertarPregunta":
 			echo insertarPregunta($_GET['email'], $_GET['pregunta'], $_GET['respuesta'],$_GET['complejidad']);
 			break;
-		case "editarPregunta":
+		case "modificarPregunta":
+			echo modificarPregunta($_GET['id'], $_GET['pregunta'], $_GET['respuesta'],$_GET['complejidad']);
 			break;
+			// http: //swluzma.esy.es/Laboratorio_6/preguntas.php?f=modificarPregunta&id=29&pregunta=nuevovalor&respuesta=modificad1o&complejidad=5
+			// http: //localhost:8888/sistemas_web/Laboratorio_6/preguntas.php?f=modificarPregunta&id=30&pregunta=nuevovalor&respuesta=modificado&complejidad=5
+
 	} 
 	
 	function insertarPregunta($email, $pregunta, $respuesta, $complejidad)
-{	
-		
+	{	
+		echo "estoy";
 				//Generación de variables para conexión a Base de Datos
 			$server = "mysql.hostinger.es";
 			$user = "u347232914_root"; 		
@@ -101,17 +105,59 @@
 			
 				// Guardamos el XML
 				$xml->asXML('preguntas.xml');
-				echo ("true");
-				
+				return true;				
 			}
 		}
 		
 		else
 		{
-			echo("false");
+			return false;
 		}
 			
 			
-}
+	}
+	
+	
+	function modificarPregunta($id, $pregunta, $respuesta, $complejidad) 
+	{
 		
+			//Generación de variables para conexión a Base de Datos
+			$server = "mysql.hostinger.es";
+			$user = "u347232914_root"; 		
+			$password = "root123"; 	
+			$bd_name = "u347232914_quiz";
+			
+			//$server = "localhost";
+			//$user = "root"; 		
+			//$password = "root"; 	
+			//$bd_name = "Quiz";
+				
+			session_start(); //Creamos una session
+					
+	
+//		Validacion del formulario
+		if ((strlen($pregunta) >= 6) and (strlen($respuesta) >= 2) and (strlen($complejidad) >= 1) and (strlen($complejidad) <= 5)) 
+		{			
+			$connection = new mysqli($server, $user, $password, $bd_name);
+			// Comprobar la conexion
+			if ($connection->connect_error) {
+				die("Connection failed: " . $connection->connect_error);
+			}
+			else
+			{	
+				
+				//Inserción de las preguntas				
+				$sql = "UPDATE preguntas SET pregunta = '{$pregunta}', respuesta = '{$respuesta}', complejidad = '{$complejidad}' WHERE id='{$id}'";
+
+				if ($connection->query($sql) === FALSE) 
+				{
+					echo "Error: " . $sql . "<br>" . $connection->error;
+				}					
+				return true;
+			}
+	
+		}
+		else return false;
+
+	}	
 ?>
